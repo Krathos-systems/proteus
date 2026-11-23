@@ -1,0 +1,14 @@
+# DO NOT COMMIT THIS FILE! Copy to docker-compose.override.yml and fill in the secrets.
+services:
+  hello-agent:
+    environment:
+      HARNESS: claude # copilot | claude | gemini | codex | pi
+      DRY_RUN: "true" # true = write tools are withheld and the agent only reports what it would do
+      WEBHOOK_SECRET: s00p3r-s3cr3t # any local value; send it as the X-Webhook-Secret header
+      LOG_LEVEL: DEBUG # ERROR | WARNING | INFORMATION (default) | DEBUG
+      # MODEL: # optional; overrides agent.json "models" for this harness (pi expects provider/model)
+      # Credentials for the harness you picked (only that one is needed):
+      COPILOT_GITHUB_TOKEN:   # copilot: fine-grained GitHub PAT with the "Copilot Requests" permission
+      ANTHROPIC_API_KEY:      # claude (and pi with an anthropic/ model)
+      GEMINI_API_KEY:         # gemini (and pi with a google/ model)
+      CODEX_API_KEY:          # codex (OPENAI_API_KEY also works; and pi with an openai/ model)

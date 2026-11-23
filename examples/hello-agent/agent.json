@@ -1,0 +1,12 @@
+{
+  "pathPrefix": "/hello",
+  "skill": "hello-skill",
+  "prompt": "Use the {skill} skill to write a short greeting for {name}.",
+  "input": {
+    "name": { "pattern": "[A-Za-z][A-Za-z .'-]{0,59}" }
+  },
+  "tools": [],
+  "writeTools": [],
+  "models": {},
+  "timeoutSeconds": 300
+}

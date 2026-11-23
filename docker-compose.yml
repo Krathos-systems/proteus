@@ -1,0 +1,38 @@
+# One service per agent, all from the same image. To add an agent:
+#   uv run python -m runner new my-agent      # creates agents/my-agent/
+# then copy the hello-agent service below, rename it, give it its own host port and set AGENT.
+# Agents in ./agents are mounted read-only; HARNESS picks copilot, claude, gemini, codex or pi.
+
+x-runner: &runner
+  build: .
+  image: proteus:${tag:-latest}
+  restart: unless-stopped
+  volumes:
+    - ./agents:/agents:ro
+
+services:
+  hello-agent:
+    <<: *runner
+    volumes:
+      - ./examples:/agents:ro
+    environment:
+      AGENT: hello-agent
+      HARNESS: ${HARNESS:-claude}
+    ports:
+      - "127.0.0.1:8081:3000"
+
+  # Smoke test: every harness CLI starts, and the runner answers its healthcheck.
+  bvt:
+    image: proteus:${tag:-latest}
+    pull_policy: never
+    profiles:
+      - bvt
+    volumes:
+      - ./examples:/agents:ro
+    environment:
+      AGENT: hello-agent
+      HARNESS: claude
+      WEBHOOK_SECRET: bvt
+    command: >
+      sh -c "copilot --version && claude --version && gemini --version && codex --version && pi --version
+      && (python -m runner & sleep 5 && python -c \"import urllib.request; urllib.request.urlopen('http://localhost:3000/hello/healthcheck', timeout=5)\")"

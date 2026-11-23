@@ -1,0 +1,4 @@
+# Normalise to LF everywhere: the image and harness CLIs run on Linux.
+* text=auto eol=lf
+
+uv.lock linguist-generated=true -diff
